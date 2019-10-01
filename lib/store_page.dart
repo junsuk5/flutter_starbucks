@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_starbucks2/models/supplier.dart';
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 
 class StorePage extends StatefulWidget {
   @override
@@ -14,12 +15,46 @@ class _StorePageState extends State<StorePage> {
   final topMenuStrings = ['DT', '리저브', '블론드', '나이트로 콜드 브루', '자차 가능'];
 
   final List<Supplier> items = [];
+  List<Supplier> filteredItems = [];
+
+  LocationData currentLocation;
+
+  Location location = Location();
+
+  final searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
 
     queryProduct();
+
+    getLocation();
+
+    searchController.addListener(() {
+      print(searchController.text);
+
+      setState(() {
+        filteredItems = items.where((e) {
+          return e.branch.contains(searchController.text);
+        }).toList();
+      });
+    });
+  }
+
+  Future getLocation() async {
+    try {
+      currentLocation = await location.getLocation();
+      print('${currentLocation.latitude}, ${currentLocation.longitude}');
+    } catch (e) {
+      print('에러');
+    }
   }
 
   Future<void> queryProduct() async {
@@ -34,8 +69,8 @@ class _StorePageState extends State<StorePage> {
         Supplier supplier = Supplier.fromJson(e);
         items.add(supplier);
       });
+      filteredItems = items;
     });
-
   }
 
   @override
@@ -49,6 +84,7 @@ class _StorePageState extends State<StorePage> {
         child: Column(
           children: <Widget>[
             TextField(
+              controller: searchController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: '검색',
@@ -113,7 +149,7 @@ class _StorePageState extends State<StorePage> {
               Row(
                 children: <Widget>[
                   Text(
-                    items[index].branch,
+                    filteredItems[index].branch,
                     style: TextStyle(fontSize: 16),
                   ),
                   Padding(
@@ -134,7 +170,7 @@ class _StorePageState extends State<StorePage> {
                 ],
               ),
               Text(
-                items[index].address,
+                filteredItems[index].address,
                 style: TextStyle(
                   color: Colors.orange,
                 ),
