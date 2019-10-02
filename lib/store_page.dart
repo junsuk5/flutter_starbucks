@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_starbucks2/models/supplier.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
 
 class StorePage extends StatefulWidget {
   @override
@@ -16,10 +15,6 @@ class _StorePageState extends State<StorePage> {
 
   final List<Supplier> items = [];
   List<Supplier> filteredItems = [];
-
-  LocationData currentLocation;
-
-  Location location = Location();
 
   final searchController = TextEditingController();
 
@@ -35,8 +30,6 @@ class _StorePageState extends State<StorePage> {
 
     queryProduct();
 
-    getLocation();
-
     searchController.addListener(() {
       print(searchController.text);
 
@@ -46,15 +39,6 @@ class _StorePageState extends State<StorePage> {
         }).toList();
       });
     });
-  }
-
-  Future getLocation() async {
-    try {
-      currentLocation = await location.getLocation();
-      print('${currentLocation.latitude}, ${currentLocation.longitude}');
-    } catch (e) {
-      print('에러');
-    }
   }
 
   Future<void> queryProduct() async {
@@ -99,7 +83,7 @@ class _StorePageState extends State<StorePage> {
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.all(8),
-                itemCount: items.length,
+                itemCount: filteredItems.length,
                 itemBuilder: (BuildContext context, int index) {
                   return _buildItem(index);
                 },

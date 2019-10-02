@@ -31,24 +31,6 @@ class _RootPageState extends State<RootPage> {
               );
             },
           ),
-          FlatButton(
-            child: Text("매장 검색"),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => StorePage()),
-              );
-            },
-          ),
-          FlatButton(
-            child: Text("매장 검색"),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => StorePage()),
-              );
-            },
-          ),
         ],
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       ),
