@@ -29,7 +29,14 @@ class _DrinkPageState extends State<DrinkPage> {
         padding: const EdgeInsets.all(8),
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
-          return _buildItem(index);
+          return GestureDetector(
+            child: _buildItem(index),
+            onTap: () {
+              print(items[index]);
+
+              // navpush
+            },
+          );
         });
   }
 
