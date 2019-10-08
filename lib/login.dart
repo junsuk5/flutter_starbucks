@@ -13,6 +13,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _username;
   TextEditingController _password;
 
+  bool isProgressing = false;
+
   @override
   void initState() {
     super.initState();
@@ -33,25 +35,36 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: Text('로그인'),
       ),
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          TextField(
-            controller: _username,
-          ),
-          TextField(
-            controller: _password,
-          ),
-          RaisedButton(
-            child: Text('로그인'),
-            onPressed: () async {
-              final token = await _repository.login(_username.text, _password.text);
+          Column(
+            children: <Widget>[
+              TextField(
+                controller: _username,
+              ),
+              TextField(
+                controller: _password,
+              ),
+              RaisedButton(
+                child: Text('로그인'),
+                onPressed: () async {
+                  setState(() {
+                    isProgressing = true;
+                  });
 
-              setState(() {
-                result = token;
-              });
-            },
+                  final token =
+                      await _repository.login(_username.text, _password.text);
+
+                  setState(() {
+                    result = token;
+                    isProgressing = false;
+                  });
+                },
+              ),
+              Text(result),
+            ],
           ),
-          Text(result),
+          if (isProgressing) Center(child: CircularProgressIndicator()),
         ],
       ),
     );
