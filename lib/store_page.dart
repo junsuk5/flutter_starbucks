@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_starbucks2/models/supplier.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_starbucks2/repository/starbucks_repository.dart';
+
+import 'models/supplier.dart';
 
 class StorePage extends StatefulWidget {
   @override
@@ -11,9 +10,11 @@ class StorePage extends StatefulWidget {
 }
 
 class _StorePageState extends State<StorePage> {
+  final _repository = StarbucksRepository();
+
   final topMenuStrings = ['DT', '리저브', '블론드', '나이트로 콜드 브루', '자차 가능'];
 
-  final List<Supplier> items = [];
+  List<Supplier> items = [];
   List<Supplier> filteredItems = [];
 
   final searchController = TextEditingController();
@@ -28,7 +29,12 @@ class _StorePageState extends State<StorePage> {
   void initState() {
     super.initState();
 
-    queryProduct();
+    _repository.queryStore().then((stores) {
+      setState(() {
+        items = stores;
+        filteredItems = items;
+      });
+    });
 
     searchController.addListener(() {
       print(searchController.text);
@@ -38,22 +44,6 @@ class _StorePageState extends State<StorePage> {
           return e.branch.contains(searchController.text);
         }).toList();
       });
-    });
-  }
-
-  Future<void> queryProduct() async {
-    final url = 'http://54.180.153.12:8000/supplier/';
-    final response = await http.get(url);
-
-    final jsonObj = json.decode(response.body);
-
-    // 화면 갱신 해!!
-    setState(() {
-      jsonObj.forEach((e) {
-        Supplier supplier = Supplier.fromJson(e);
-        items.add(supplier);
-      });
-      filteredItems = items;
     });
   }
 

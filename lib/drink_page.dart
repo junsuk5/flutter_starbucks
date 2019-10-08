@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_starbucks2/models/coffee.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_starbucks2/repository/starbucks_repository.dart';
 
 class DrinkPage extends StatefulWidget {
   @override
@@ -10,29 +8,18 @@ class DrinkPage extends StatefulWidget {
 }
 
 class _DrinkPageState extends State<DrinkPage> {
-  final List<Coffee> items = [];
+  final _repository = StarbucksRepository();
+
+  List<Coffee> items = [];
 
   @override
   void initState() {
     super.initState();
 
-    queryProduct();
-  }
-
-  Future<void> queryProduct() async {
-    final url = 'http://54.180.153.12:8000/product/';
-    final response = await http.get(url);
-
-    final jsonObj = json.decode(response.body);
-
-    jsonObj.forEach((e) {
-      Coffee coffee = Coffee.fromJson(e);
-      items.add(coffee);
-    });
-
-    // 화면 갱신 해!!
-    setState(() {
-
+    _repository.queryProduct().then((products) {
+      setState(() {
+        items = products;
+      });
     });
   }
 
