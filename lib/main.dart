@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_starbucks2/repository/starbucks_repository.dart';
 import 'package:flutter_starbucks2/root_page.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(
+  MultiProvider(
+    providers: [
+      Provider<StarbucksRepository>.value(value: StarbucksRepository()),
+    ],
+    child: MyApp(),
+  )
+);
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

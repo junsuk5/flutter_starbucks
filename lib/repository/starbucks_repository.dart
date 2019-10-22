@@ -5,6 +5,15 @@ import 'package:flutter_starbucks2/models/supplier.dart';
 import 'package:http/http.dart' as http;
 
 class StarbucksRepository {
+
+  List<Coffee> coffeeList = [];
+
+  StarbucksRepository() {
+    queryProduct().then((value) {
+      coffeeList = value;
+    });
+  }
+
   /// 음료 리스트
   Future<List<Coffee>> queryProduct() async {
     final List<Coffee> items = [];

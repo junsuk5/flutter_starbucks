@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_starbucks2/models/coffee.dart';
 import 'package:flutter_starbucks2/repository/starbucks_repository.dart';
+import 'package:provider/provider.dart';
 
 class DrinkPage extends StatefulWidget {
   @override
@@ -8,31 +9,19 @@ class DrinkPage extends StatefulWidget {
 }
 
 class _DrinkPageState extends State<DrinkPage> {
-  final _repository = StarbucksRepository();
-
-  List<Coffee> items = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    _repository.queryProduct().then((products) {
-      setState(() {
-        items = products;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<StarbucksRepository>(context);
+
     return ListView.builder(
         padding: const EdgeInsets.all(8),
-        itemCount: items.length,
+        itemCount: provider.coffeeList.length,
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             child: _buildItem(index),
             onTap: () {
-              print(items[index]);
+              print(provider.coffeeList[index]);
 
               // navpush
             },
@@ -41,6 +30,7 @@ class _DrinkPageState extends State<DrinkPage> {
   }
 
   Widget _buildItem(int index) {
+    final provider = Provider.of<StarbucksRepository>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -62,7 +52,7 @@ class _DrinkPageState extends State<DrinkPage> {
               Row(
                 children: <Widget>[
                   Text(
-                    items[index].name,
+                    provider.coffeeList[index].name,
                     style: TextStyle(fontSize: 16),
                   ),
                   Padding(
@@ -83,13 +73,13 @@ class _DrinkPageState extends State<DrinkPage> {
                 ],
               ),
               Text(
-                items[index].menuCategory,
+                provider.coffeeList[index].menuCategory,
                 style: TextStyle(
                   color: Colors.orange,
                 ),
               ),
               Text(
-                '${items[index].price}원',
+                '${provider.coffeeList[index].price}원',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
