@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_starbucks2/models/coffee.dart';
@@ -6,11 +7,21 @@ import 'package:http/http.dart' as http;
 
 class StarbucksRepository {
 
-  List<Coffee> coffeeList = [];
+  final coffeeListStreamController = StreamController<List<Coffee>>()..add([]);
+
+  get coffeeListStream => coffeeListStreamController.stream;
+
+//  List<Coffee> coffeeList = [];
 
   StarbucksRepository() {
+//    queryProduct().then((value) {
+//      coffeeListStreamController.add(value);
+//    });
+  }
+
+  loadProduct() {
     queryProduct().then((value) {
-      coffeeList = value;
+      coffeeListStreamController.add(value);
     });
   }
 

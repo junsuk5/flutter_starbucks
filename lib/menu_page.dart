@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_starbucks2/drink_page.dart';
 import 'package:flutter_starbucks2/food_page.dart';
+import 'package:flutter_starbucks2/models/coffee.dart';
 import 'package:flutter_starbucks2/product_page.dart';
+import 'package:flutter_starbucks2/repository/starbucks_repository.dart';
 import 'package:flutter_starbucks2/reservation_page.dart';
+import 'package:provider/provider.dart';
 
 class MenuPage extends StatefulWidget {
   @override
@@ -42,7 +45,10 @@ class _MenuPageState extends State<MenuPage> {
         ),
         body: TabBarView(
           children: <Widget>[
-            DrinkPage(),
+            StreamProvider<List<Coffee>>.value(
+              value: Provider.of<StarbucksRepository>(context).coffeeListStream,
+              child: DrinkPage(),
+            ),
             FoodPage(),
             ProductPage(),
             ReservationPage(),

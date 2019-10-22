@@ -12,25 +12,36 @@ class _DrinkPageState extends State<DrinkPage> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<StarbucksRepository>(context);
+    final coffeeList = Provider.of<List<Coffee>>(context);
 
-    return ListView.builder(
-        padding: const EdgeInsets.all(8),
-        itemCount: provider.coffeeList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            child: _buildItem(index),
-            onTap: () {
-              print(provider.coffeeList[index]);
+    final repository = Provider.of<StarbucksRepository>(context);
 
-              // navpush
-            },
-          );
-        });
+
+    return Column(
+      children: <Widget>[
+        RaisedButton(onPressed: () {
+          repository.loadProduct();
+        },),
+        ListView.builder(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(8),
+            itemCount: coffeeList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return GestureDetector(
+                child: _buildItem(index),
+                onTap: () {
+                  print(coffeeList[index]);
+
+                  // navpush
+                },
+              );
+            }),
+      ],
+    );
   }
 
   Widget _buildItem(int index) {
-    final provider = Provider.of<StarbucksRepository>(context);
+    final coffeeList = Provider.of<List<Coffee>>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -52,7 +63,7 @@ class _DrinkPageState extends State<DrinkPage> {
               Row(
                 children: <Widget>[
                   Text(
-                    provider.coffeeList[index].name,
+                    coffeeList[index].name,
                     style: TextStyle(fontSize: 16),
                   ),
                   Padding(
@@ -73,13 +84,13 @@ class _DrinkPageState extends State<DrinkPage> {
                 ],
               ),
               Text(
-                provider.coffeeList[index].menuCategory,
+                coffeeList[index].menuCategory,
                 style: TextStyle(
                   color: Colors.orange,
                 ),
               ),
               Text(
-                '${provider.coffeeList[index].price}원',
+                '${coffeeList[index].price}원',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
